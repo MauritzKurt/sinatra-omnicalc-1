@@ -1,7 +1,9 @@
 require "sinatra"
 require "sinatra/reloader"
 
-get("/howdy") do
+
+
+get("/") do
   erb(:hello)
 end
 
@@ -29,9 +31,28 @@ get("/square_root/results") do
   erb(:square_root_results)
 end
 
-get("/") do
-  "
-  <h1>Welcome to your Sinatra App!</h1>
-  <p>Define some routes in app.rb</p>
-  "
+get("/payment/new") do
+  erb(:new_payment)
+end
+
+get("/payment/results") do
+  @payment_APR = params.fetch("users_numberAPR").to_f
+  @payment_Noy = params.fetch("users_numberNoY").to_f
+  @payment_Principal = params.fetch("users_numberPrincipal").to_f
+  monthlyInterestRate = @payment_APR / 100 / 12
+  totalPayments = @payment_Noy * 12
+  @monthlyPayment = (@payment_Principal * monthlyInterestRate * ((1 + monthlyInterestRate) ** totalPayments)) / (((1 + monthlyInterestRate) ** totalPayments) - 1)
+  erb(:payment_results)
+end
+
+get ("/random/new") do
+  erb(:new_random)
+end
+
+get ("/random/results") do
+  @minimum = params.fetch("users_numberMinimum").to_f
+  @maximum = params.fetch("users_numberMaximum").to_f
+  @randNum = rand(@minimum..@maximum)
+  
+  erb(:random_results)
 end
